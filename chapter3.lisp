@@ -1,4 +1,5 @@
-;;; code from chapter 3 of Practical Common Lisp
+;;; code from chapter 3 of Practical Common Lisp, "Practical: A Simple
+;;; Database"
 ;;; http://www.gigamonkeys.com/book/practical-a-simple-database.html
 
 ;; property lists (aka plist)
