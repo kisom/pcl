@@ -102,7 +102,42 @@
 ;; true. the symbol T is the canonical true value.
 
 ;; NIL is a slightly complicated form: it is at once an atom and a
-;; list (an empty list). therefore, NIL and the empty list are equivalent.
+;; list (an empty list). therefore, NIL and the empty list are
+;; equivalent. because NIL is self-evaluated (as is T), (quote NIL),
+;; 'NIL, () and NIL are all equivalent. similarly, T and 'T are
+;; equivalent.
+
+;; common lisp has four generic equality predicates. in order of
+;; discrimination, they are EQ, EQL, EQUAL, and EQUALP.
+
+;; EQ is used to check for object equality; i.e. the two objects are
+;; equivalent. this may be implementation depended: (EQ 1 1.0) may be
+;; false.
+;; EQL considers two objects of the same class representing the same
+;; numeric or character value to be equivalent. therefore, (EQL 1 1)
+;; is guaranteed to be T.
+;; there is a school of thought that tries to use EQ when
+;; possible, i.e. when not comparing numbers or characters. the school
+;; of thought is (a) it indicates numbers and characters aren't being
+;; compared and (b) it has efficiency benefits in that EQ doesn't have
+;; to check whether its arguments are numbers or characters. the
+;; opposite school of thought says that EQ damages the clarity of the
+;; code and the performance benefits are trivial compared to actual
+;; performance bottlenecks. (Peter prefers the always use EQL school
+;; of thought.)
+
+;; EQUAL loosens the restrictions to consider lists with the
+;; recursively same contents and structure according to EQUAL. it
+;; considers strings equivalent according to traditional semantics. if
+;; it doesn't have a special case for the form, it falls back to EQL.
+;; EQUALP ignores differences in case, and numbers are equivalent if
+;; they have the same mathematical value. EQUALP falls back to EQL
+;; also.
+
+;;; formatting lisp code
+;; see riastradh's lisp style guide:
+;; http://mumble.net/~campbell/scheme/style.txt
+;; also, use emacs. it will indent properly.
 
 
 ;;  LocalWords:  evaluator
