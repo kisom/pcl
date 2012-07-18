@@ -57,7 +57,7 @@
 ;; to avoid a leak, we'll use a temporary name via the with-gensyms
 ;; macro. for completeness, here is the definition from the last
 ;; chapter:
-4(defmacro with-gensyms ((&rest names) &body body)
+(defmacro with-gensyms ((&rest names) &body body)
   `(let ,(loop for n in names collect `(,n (gensym)))
      ,@body))
 
@@ -143,7 +143,7 @@
 ;; having to use the name twice: once in the defun and once in the let
 (defmacro deftest (name parameters &body body)
   `(defun ,name ,parameters
-     (let ((*test-name* ,name))
+     (let ((*test-name* ',name))
        ,@body)))
 
 (deftest test-+ ()
@@ -160,3 +160,38 @@
 ;; and perhaps now we rerun test-arithmetic. we should get the same
 ;; output.
 (test-arithmetic)
+
+;; to get full test hierarchy, we can use *test-name* as a list:
+(defmacro deftest (name parameters &body body)
+  `(defun ,name ,parameters
+     (let ((*test-name* (append *test-name* (list ',name))))
+       ,@body)))
+
+;; tests need to be re-evaluated to make use of new deftest:
+(deftest test-+ ()
+  (check
+   (= (+ 1 2) 3)
+   (= (+ 1 2 3) 6)
+   (= (+ -1 -3) -4)))
+
+(deftest test-* ()
+  (check
+   (= (* 2 2) 4)
+   (= (* 3 5) 15)))
+
+
+;; and redefine TEST-ARITHMETIC as a test:
+(deftest test-arithmetic ()
+  (combine-results
+   (test-+)
+   (test-*)))
+
+;; output now includes full test hierarchy
+(format t "~%VERIFY TEST NAME CONTAINS FULL HIERARCHY~%")
+(test-arithmetic)
+
+;; more test hierarchy examples:
+(deftest test-math ()
+  (test-arithmetic))
+
+;; the complete test suite is in test-suite.lisp
