@@ -65,5 +65,57 @@
 (elt *my-array-1* 0)           ;; 1
 (elt *my-array-1* 2)           ;; 3
 
-;; elt treats a vector with a fill pointer as having that length; it
-;; will signal an error on an out-of-bounds access.
+;; ELT treats a vector with a fill pointer as having that length; it
+;; will signal an error on an out-of-bounds access. ELT is also a
+;; STFable place.
+
+;;; sequence iterating functions
+;; Table 11-1.Basic Sequence Functions
+
+;; Name       Required Arguments          Returns
+;; COUNT      Item and sequence           Number of times item appears
+;;                                        in sequence
+;; FIND       Item and sequence           Item or NIL
+;; POSITION   Item and sequence           Index into sequence or NIL
+;; REMOVE     Item and sequence           Sequence with instances of
+;;                                        item removed
+;; SUBSTITUTE New item, item, and         Sequence with instances of
+;;            sequence                    item replaced with new
+;;                                        item
+
+;; note REMOVE and SUBSTITUTE return sequence of the same type
+
+;; keyword arguments:
+;; :test      function returning a        used to compare item to each
+;;            bool, takes two args        item
+;; :key       function taking one arg     used to extract a key value
+;;                                        which is compared in place
+;;                                        of the item itself (elements
+;;                                        such as FIND return the
+;;                                        actual element)
+;; :start and :end
+;; :from-end  boolean                     if not nil, sequence is
+;;                                        searched in reverse order;
+;;                                        by itself, only effects FIND
+;;                                        and POSITION
+;; :count     integer                     specifies how many elements
+;;                                        to remove or substitute; can
+;;                                        be used in conjunction with
+;;                                        REMOVE and SUBSTITUTE
+;; by itself, :from-end doesn't effect COUNT, but :key and :test can
+;; affect the results.
+;; :count
+
+;;; higher-order function variants
+;; variants of the previous with -IF appended take a function argument
+;; in place of the item argument; only elements for which the function
+;; returns true are returned; with -IF-NOT, if function returns NIL
+
+;; note that -IF-NOT is technically deprecated but considered
+;; ill-advised. for example, REMOVE-IF-NOT returns items that match
+;; the predicate.
+
+;; these functions take the same keyword args except :test
+
+;; there is also REMOVE-DUPLICATES, which takes only a sequence and
+;; removes any duplicates.
